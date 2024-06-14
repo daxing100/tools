@@ -90,7 +90,6 @@ class XmindToXls:
 
 
 if __name__ == '__main__':
-    #filename = '/Users/hanxing/Downloads/case.xmind'
     parser = argparse.ArgumentParser(usage="usage", description="description")
     parser.add_argument('-f', '--file', dest='file', type=str, default='', help='xmind文件所在路径')
     args = parser.parse_args()
