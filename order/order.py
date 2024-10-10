@@ -6,9 +6,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+
     if request.method == 'POST':
         access_token = request.form['access_token']
-
         headers = {
             'user-agent': 'Dart/3.4 (dart:io)',
             'content-type': 'application/json; charset=utf-8',
@@ -26,7 +26,7 @@ def index():
         json_data = {
             'showId': '670496e7940c4c0001d49776',
             'sessionId': '6705ee24863a4700013a111e',
-            'inventoryId': '67063d9cfa8a750001a56a64',
+            'inventoryId': '67077435d9db7800011532bd',
             'qty': 1,
             'consecutive': False,
             'delivery': {
@@ -44,33 +44,33 @@ def index():
                 'deliverMethod': 'SELF_PICKUP',
             },
             'tradeAmount': {
-                'payableAmount': 23.0,
-                'ticketAmount': 11.0,
+                'payableAmount': 13.0,
+                'ticketAmount': 1.0,
                 'serviceFee': 12.0,
                 'vat': 0.0,
                 'discountAmount': 0.0,
                 'transactionCurrency': 'HKD',
             },
             'displayAmount': {
-                'payableAmount': 23.0,
-                'ticketAmount': 11.0,
+                'payableAmount': 13.0,
+                'ticketAmount': 1.0,
                 'serviceFee': 12.0,
                 'vat': 0.0,
                 'exchangeRate': 1.0,
                 'discountAmount': 0.0,
                 'transactionCurrency': 'HKD',
             },
-            'sectorId': '6705ee24863a4700013a1121',
-            'zoneId': '6705ee24863a4700013a1122',
+            'sectorId': '6705ee24863a4700013a1523'
         }
-
         response = requests.post('https://api-global-qa.moretickets.com/user/order/v1/create', headers=headers,
                                  json=json_data)
         orderId = response.json().get('data', {}).get('orderId')
+        print(response.json())
 
         json_data = {'orderId': orderId}
         response = requests.post('https://api-global-qa.moretickets.com/user/order/v1/pay_fees', headers=headers,
                                  json=json_data)
+        print(response.json())
         payMethod = response.json().get('data', {}).get('payMethods', [{}])[0].get('payMethod')
         tradId = response.json().get('data', {}).get('tradeId')
 
@@ -81,6 +81,7 @@ def index():
         }
         response = requests.post('https://api-global-qa.moretickets.com/user/order/v1/prepay', headers=headers,
                                  json=json_data)
+        print(response.json())
         paymentOrderNo = response.json().get('data', {}).get('paymentOrderNo')
 
         params = {
@@ -89,7 +90,7 @@ def index():
         }
 
         response = requests.get('https://api-global-qa.moretickets.com/tool/auto_pay', params=params)
-
+        print(response.json())
         return response.json()
 
     return render_template('index.html')
