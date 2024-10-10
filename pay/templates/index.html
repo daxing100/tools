@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海外站支付</title>
+    <script>
+        async function callApi() {
+            const environment = document.querySelector('input[name="environment"]:checked').value;
+            const tradeNo = document.getElementById('tradeNo').value;
+            const outTradeNo = document.getElementById('outTradeNo').value;
+
+            const url = '/api_request';
+
+            const data = {
+                environment: environment,
+                tradeNo: tradeNo,
+                outTradeNo: outTradeNo
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('result').innerText = '错误: ' + error.message;
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        input {
+            margin-right: 10px;
+        }
+        #result {
+            margin-top: 40px;
+            white-space: pre-wrap;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PAY</h1>
+
+    <label>
+        <input type="radio" name="environment" value="qa" checked> QA
+    </label>
+    <label>
+        <input type="radio" name="environment" value="stage"> Stage
+    </label>
+
+    <br><br>
+
+    <label for="tradeNo">TradeNo:</label>
+    <input type="text" id="tradeNo" required>
+
+    <label for="outTradeNo">OutTradeNo:</label>
+    <input type="text" id="outTradeNo" required>
+
+    <button onclick="callApi()">Submit</button>
+
+    <h2>Response:</h2>
+    <div id="result"></div>
+</body>
+</html>
